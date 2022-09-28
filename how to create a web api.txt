@@ -1,0 +1,23 @@
+How to create a web API VS CODE
+
+1: CMD 
+
+2: dotnet new --list // This will return a list of all the templates that i can use to create an project with .NET CLI
+
+3: Creating API using the WEB API Template (Make sure that you are in the folder where you want to have your API):
+dotnet new webapi -o WebAPIAutores
+
+4: Open VS CODE:
+   code .
+
+5: Click yes on the prompt that will pop
+
+
+Running your API VS CODE
+
+Menu > Terminal > New Terminal
+
+dotnet run.
+
+
+Creating the startup class
