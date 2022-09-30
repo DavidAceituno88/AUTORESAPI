@@ -1,0 +1,20 @@
+How to connect with SQL SERVER AND CREATE A DB WITH ENTITY FRAMEWORK CORE
+
+1 You need to have your Models or Entities created and your Context created.
+
+2 You need to have Microsoft.EntityFrameworkCore intalled and added to your api project folder
+
+3 Create a ConnectionString as follow in appsettings.json: 
+ 	"ConnectionStrings": {
+    		"defaultConnections" : "Server=YourServerName;Database=YourDBName;Trusted_Connection=True"
+
+4 On your Main program "program.cs" now you can create a connection :
+	services.AddDbContext<ApplicationDbContext>(options => 
+            	options.UseSqlServer(Configuration.GetConnectionString("defaultConnections")));
+
+5 Now you can create your first Migration with the next command: dotnet ef migrations add "Name of your migration"
+
+6 Create your database with this command : dotnet ef database update.
+		This will create your db in SQL SERVER.
+
+**Step 5 and 6 must be executed in your VSCODE Terminal, make sure you are in your project´s folder. 
