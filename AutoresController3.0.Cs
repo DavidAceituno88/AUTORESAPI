@@ -26,9 +26,44 @@ namespace WebAPIAutores.Controllers
             return await context.Autores.Include(x => x.Libros).ToListAsync();
         }
 
+        [HttpGet("{id:int}")] //Gets autores by id
+        public async Task<ActionResult<Autor>> Get(int id)
+        {
+            var autor = await context.Autores.FirstOrDefaultAsync(x => x.Id == id);
+            
+            if(autor == null)
+            {
+                return NotFound();
+            }
+
+            return autor;
+
+        }
+        
+        [HttpGet("{nombre}")] //Gets autores by Name 
+        public async Task<ActionResult<Autor>> Get(string nombre)
+        {
+            var autor = await context.Autores.FirstOrDefaultAsync(x => x.Nombre.Contains(nombre));
+            
+            if(autor == null)
+            {
+                return NotFound();
+            }
+
+            return autor;
+
+        }
+
         [HttpPost]
         public async Task<ActionResult> Post(Autor autor)
         {
+            //Validation From the DB
+            var alreadyExist = await context.Autores.AnyAsync(x => x.Nombre == autor.Nombre);
+            if(alreadyExist)
+            {
+                return BadRequest($"An autor with the name {autor.Nombre} already exists");
+            }
+
             context.Add(autor);
             await context.SaveChangesAsync();
             return Ok();
