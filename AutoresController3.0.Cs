@@ -13,15 +13,18 @@ namespace WebAPIAutores.Controllers
     public class AutoresController : ControllerBase
     {
         private readonly ApplicationDbContext context;
+        private readonly ILogger<AutoresController> logger;
 
-        public AutoresController(ApplicationDbContext context)
+        public AutoresController(ApplicationDbContext context, ILogger<AutoresController> logger)
         {
+            this.logger = logger;
             this.context = context;  
         }
 
         [HttpGet]
         public async Task<ActionResult<List<Autor>>> Get()
         {
+            logger.LogWarning("We are getting the Autors");
              //Here i added the include method to show the books related to the autor
             return await context.Autores.Include(x => x.Libros).ToListAsync();
         }
