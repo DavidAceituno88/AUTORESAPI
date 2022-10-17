@@ -25,6 +25,8 @@ namespace WebAPIAutores
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            
+             app.UseLogResponseHttp();
             // Configure the HTTP request pipeline.
             if (env.IsDevelopment())
             {
