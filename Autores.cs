@@ -13,8 +13,8 @@ namespace WebAPIAutores.Entidades
         
         [Required (ErrorMessage = "The field {0} is required")]
         [StringLength(maximumLength:120, ErrorMessage = "The field {0} must have more than {1} characters")]
-        [FirstLetterUpperCaseAttribute] //Validation created in the validations folder
+        [FirstLetterUpperCaseAttribute]
         public string Nombre { get; set; }
-        public List<Libro> Libros {get; set;}  
+       
     }
 }
