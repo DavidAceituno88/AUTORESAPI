@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebAPIAutores.DTOs;
 using WebAPIAutores.Entidades;
 
 namespace WebAPIAutores.Controllers
@@ -13,20 +15,20 @@ namespace WebAPIAutores.Controllers
     public class AutoresController : ControllerBase
     {
         private readonly ApplicationDbContext context;
-        private readonly ILogger<AutoresController> logger;
+        private readonly IMapper mapper;
 
-        public AutoresController(ApplicationDbContext context, ILogger<AutoresController> logger)
+        public AutoresController(ApplicationDbContext context, IMapper mapper)
         {
-            this.logger = logger;
-            this.context = context;  
+            
+            this.context = context;
+            this.mapper = mapper;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<Autor>>> Get()
         {
-            logger.LogWarning("We are getting the Autors");
-             //Here i added the include method to show the books related to the autor
-            return await context.Autores.Include(x => x.Libros).ToListAsync();
+            //Here i added the include method to show the books related to the autor
+            return await context.Autores.ToListAsync();
         }
 
         [HttpGet("{id:int}")] //Gets autores by id
@@ -58,20 +60,23 @@ namespace WebAPIAutores.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post(Autor autor)
+        public async Task<ActionResult> Post(AutorCreationDTO autorCreationDTO)
         {
             //Validation From the DB
-            var alreadyExist = await context.Autores.AnyAsync(x => x.Nombre == autor.Nombre);
+            var alreadyExist = await context.Autores.AnyAsync(x => x.Nombre == autorCreationDTO.Nombre);
             if(alreadyExist)
             {
-                return BadRequest($"An autor with the name {autor.Nombre} already exists");
+                return BadRequest($"An autor with the name {autorCreationDTO.Nombre} already exists");
             }
-
+            
+            var autor = mapper.Map<Autor>(autorCreationDTO);
+            
             context.Add(autor);
             await context.SaveChangesAsync();
             return Ok();
         }
 
+        
         [HttpPut("{id:int}")] 
         public async Task<ActionResult> Put(Autor autor, int id)
         {
