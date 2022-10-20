@@ -25,37 +25,33 @@ namespace WebAPIAutores.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Autor>>> Get()
+        public async Task<ActionResult<List<AutorDTO>>> Get()
         {
-            //Here i added the include method to show the books related to the autor
-            return await context.Autores.ToListAsync();
+            //using automatic mapper now
+            var autors = await context.Autores.ToListAsync();
+            return mapper.Map<List<AutorDTO>>(autors);
         }
 
         [HttpGet("{id:int}")] //Gets autores by id
-        public async Task<ActionResult<Autor>> Get(int id)
+        public async Task<ActionResult<AutorDTO>> Get(int id)
         {
-            var autor = await context.Autores.FirstOrDefaultAsync(x => x.Id == id);
+            var autor = await context.Autores.FirstOrDefaultAsync(autorDB => autorDB.Id == id);
             
             if(autor == null)
             {
                 return NotFound();
             }
 
-            return autor;
+            return mapper.Map<AutorDTO>(autor);
 
         }
         
         [HttpGet("{nombre}")] //Gets autores by Name 
-        public async Task<ActionResult<Autor>> Get(string nombre)
+        public async Task<ActionResult<List<AutorDTO>>> Get(string nombre)
         {
-            var autor = await context.Autores.FirstOrDefaultAsync(x => x.Nombre.Contains(nombre));
-            
-            if(autor == null)
-            {
-                return NotFound();
-            }
+            var autores = await context.Autores.Where(autorDB => autorDB.Nombre.Contains(nombre)).ToListAsync();
 
-            return autor;
+            return mapper.Map<List<AutorDTO>>(autores);
 
         }
 
