@@ -26,7 +26,7 @@ namespace WebAPIAutores.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<LibroDTO>> Get(int id)
         {   //Here i added the include method to show the autors related to the book.
-            var libro = await context.Libros.FirstOrDefaultAsync(x => x.Id == id);
+            var libro = await context.Libros.Include(libroDB => libroDB.Comentarios).FirstOrDefaultAsync(x => x.Id == id);
             return mapper.Map<LibroDTO>(libro);
         }
 
