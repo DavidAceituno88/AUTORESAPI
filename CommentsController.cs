@@ -22,6 +22,20 @@ namespace WebAPIAutores.Controllers
             this.mapper = mapper;
         }
 
+        [HttpGet]
+        public async Task<ActionResult<List<CommentDTO>>> Get(int libroId)
+        {
+            var exist = await context.Libros.AnyAsync(libroDB => libroDB.Id == libroId);
+            if(!exist)
+            {
+                return BadRequest();
+            } 
+            var comment = await context.Comentarios
+                .Where(commentDB => commentDB.LibroId == libroId).ToListAsync();
+
+            return mapper.Map<List<CommentDTO>>(comment);
+        }
+
         [HttpPost]
         public async Task<ActionResult> Post(int libroId, CommentCreationDTO commentCreationDTO)
         {
