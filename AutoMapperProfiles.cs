@@ -17,6 +17,7 @@ namespace WebAPIAutores.Utilidades
             CreateMap<LibroCreationDTO, Libro>();
             CreateMap<Libro, LibroDTO>();
             CreateMap<CommentCreationDTO, Comentario>();
+            CreateMap<Comentario, CommentDTO>();
         }
     }
 }
