@@ -29,6 +29,16 @@ namespace WebAPIAutores.Controllers
             var libro = await context.Libros.Include(libroDB => libroDB.Comentarios).FirstOrDefaultAsync(x => x.Id == id);
             return mapper.Map<LibroDTO>(libro);
         }
+        
+        [HttpGet("random")]
+        public async Task<ActionResult<LibroDTO>> GetRandom()
+        {
+            int total = await context.Libros.CountAsync();
+            Random rand = new Random();
+            int offset = rand.Next(0,total);
+            var result = await context.Libros.Skip(offset).FirstOrDefaultAsync();
+            return mapper.Map<LibroDTO>(result);
+        }
 
         [HttpPost]
         public async Task<ActionResult> Post(LibroCreationDTO libroCreationDTO)
