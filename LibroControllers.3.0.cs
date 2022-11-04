@@ -40,15 +40,18 @@ namespace WebAPIAutores.Controllers
             return mapper.Map<LibroDTO>(result);
         }
 
-        [HttpPost]
+         [HttpPost]
         public async Task<ActionResult> Post(LibroCreationDTO libroCreationDTO)
         {
-            // var exist = await context.Autores.AnyAsync(x => x.Id == libro.AutorId);
+            var autoresIds = await context.Autores.
+                            Where(autorDB => libroCreationDTO.AutoresIds.
+                            Contains(autorDB.Id)).Select(x => x.Id).ToListAsync();
             
-            // if (!exist)
-            // {
-            //     return BadRequest($"{libro.AutorId} Not found in our Autor records");
-            // }
+            if (libroCreationDTO.AutoresIds.Count != autoresIds.Count)
+            {
+                return BadRequest("One of the Authors does not exists");
+            }
+            
             var libro = mapper.Map<Libro>(libroCreationDTO);
             context.Add(libro);
             await context.SaveChangesAsync();
