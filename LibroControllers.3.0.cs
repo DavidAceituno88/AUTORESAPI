@@ -43,6 +43,10 @@ namespace WebAPIAutores.Controllers
          [HttpPost]
         public async Task<ActionResult> Post(LibroCreationDTO libroCreationDTO)
         {
+        
+            if(libroCreationDTO.AutoresIds == null){
+                return BadRequest("You cannot add a book without Authors");
+            }
             var autoresIds = await context.Autores.
                             Where(autorDB => libroCreationDTO.AutoresIds.
                             Contains(autorDB.Id)).Select(x => x.Id).ToListAsync();
