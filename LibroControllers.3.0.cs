@@ -32,11 +32,19 @@ namespace WebAPIAutores.Controllers
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<LibroDTO>> Get(int id)
-        {   //Here i added the include method to show the autors related to the book.
+        {   
+            var exist = await context.Libros.FirstOrDefaultAsync(x => x.Id == id);
+            if (exist == null)
+            {
+                return BadRequest($"There is no book with id: {id}");
+            }
+            //Here i added the include method to show the autors related to the book.
             var libro = await context.Libros
                 .Include(libroDB => libroDB.AutoresLibros)
                 .ThenInclude(autorlibroDB => autorlibroDB.Autor)
                 .FirstOrDefaultAsync(x => x.Id == id);
+
+                libro.AutoresLibros.OrderBy(x => x.Orden).ToList();
             return mapper.Map<LibroDTO>(libro);
         }
 
