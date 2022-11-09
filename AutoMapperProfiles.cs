@@ -14,12 +14,38 @@ namespace WebAPIAutores.Utilidades
         {
             CreateMap<AutorCreationDTO, Autor>();
             CreateMap<Autor, AutorDTO>();
+            CreateMap<Autor, AutorDTOWithLibros>()
+                .ForMember(autorDTO => autorDTO.Libros, options => options.MapFrom(MapAutorDTOLibros));
+            
             CreateMap<LibroCreationDTO, Libro>()
                 .ForMember(libro => libro.AutoresLibros, options => options.MapFrom(MapAuthorBooks));
-            CreateMap<Libro, LibroDTO>()
+            CreateMap<Libro, LibroDTO>();
+            CreateMap<Libro, LibroDTOWithAutores>()
                 .ForMember(libroDTO => libroDTO.Autores, options => options.MapFrom(MapLibroDTOAuthors));
+            
             CreateMap<CommentCreationDTO, Comentario>();
             CreateMap<Comentario, CommentDTO>();
+        }
+
+        private List<LibroDTO> MapAutorDTOLibros(Autor autor, AutorDTO autorDTO)
+        {
+            var result = new List<LibroDTO>();
+
+            if(autor.AutoresLibros == null)
+            {
+                return result;
+            }
+
+            foreach (var autorlibro in autor.AutoresLibros)
+            {
+                result.Add(new LibroDTO()
+                {
+                    Id = autorlibro.LibroId,
+                    Titulo = autorlibro.Libro.Titulo
+                });
+            }    
+
+            return result;
         }
 
         private List<AutorDTO> MapLibroDTOAuthors(Libro libro, LibroDTO libroDTO)
@@ -35,7 +61,7 @@ namespace WebAPIAutores.Utilidades
                     Id = autorlibro.AutorId,
                     Nombre = autorlibro.Autor.Nombre
                 });
-            }
+            } 
             return result;
         }
         private List<AutoresLibros> MapAuthorBooks(LibroCreationDTO libroCreationDTO, Libro libro)
