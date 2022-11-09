@@ -31,7 +31,7 @@ namespace WebAPIAutores.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<LibroDTO>> Get(int id)
+        public async Task<ActionResult<LibroDTOWithAutores>> Get(int id)
         {   
             var exist = await context.Libros.FirstOrDefaultAsync(x => x.Id == id);
             if (exist == null)
@@ -45,7 +45,7 @@ namespace WebAPIAutores.Controllers
                 .FirstOrDefaultAsync(x => x.Id == id);
 
                 libro.AutoresLibros.OrderBy(x => x.Orden).ToList();
-            return mapper.Map<LibroDTO>(libro);
+            return mapper.Map<LibroDTOWithAutores>(libro);
         }
 
         [HttpGet("random")]
