@@ -13,5 +13,6 @@ namespace WebAPIAutores.DTOs
         [StringLength(maximumLength:120, ErrorMessage = "The field {0} must have more than {1} characters")]
         [FirstLetterUpperCaseAttribute]
         public string Nombre { get; set; }
+        public List<LibroDTO> Libros { get; set; }
     }
 }
