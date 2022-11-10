@@ -32,7 +32,7 @@ namespace WebAPIAutores.Controllers
             return mapper.Map<List<AutorDTO>>(autors);
         }
 
-        [HttpGet("{id:int}")] //Gets autores by id
+        [HttpGet("{id:int}" , Name = "AuthorById")] //Gets autores by id
         public async Task<ActionResult<AutorDTOWithLibros>> Get(int id)
         {
             var autor = await context.Autores
@@ -72,7 +72,10 @@ namespace WebAPIAutores.Controllers
             
             context.Add(autor);
             await context.SaveChangesAsync();
-            return Ok();
+
+            var autorDTO = mapper.Map<AutorDTO>(autor);
+
+            return CreatedAtRoute("AuthorById", new {id = autor.Id}, autorDTO);
         }
 
         
