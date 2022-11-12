@@ -89,5 +89,20 @@ namespace WebAPIAutores.Controllers
             await context.SaveChangesAsync();
             return Ok();
         }
+        
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> Put(int id, LibroCreationDTO librocreationDTO)
+        {
+            var libroDB = await context.Libros.Include(x => x.AutoresLibros).FirstOrDefaultAsync( x => x.Id == id);
+            if(libroDB == null)
+            {
+                return NotFound();
+            }
+
+            libroDB = mapper.Map(librocreationDTO, libroDB);
+
+            await context.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }
