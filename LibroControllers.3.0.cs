@@ -102,5 +102,19 @@ namespace WebAPIAutores.Controllers
             var libroDTO = mapper.Map<LibroDTO>(libro);
             return CreatedAtRoute("GetBook", new {id = libro.Id}, libroDTO);
         }
+        
+         [HttpDelete("{id:int}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var exist = await context.Libros.AnyAsync(x => x.Id == id);
+            if(!exist)
+            {
+                return NotFound();
+            }
+            context.Remove(new Libro() {Id = id});
+
+            await context.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }
